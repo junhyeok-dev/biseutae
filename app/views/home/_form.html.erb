@@ -1,0 +1,7 @@
+<%= form_tag answer_index_path, method: :post, id: 'answer-form', class: 'fixed bottom-16' do %>
+  <%= fields_for :answer do |answer_form| %>
+    <%= answer_form.label :content, "음..." %>
+    <%= answer_form.text_field :content, placeholder: "단어를 입력해주세요", value: '' %>
+  <% end %>
+  <%= submit_tag "이거 맞아?" %>
+<% end %>
