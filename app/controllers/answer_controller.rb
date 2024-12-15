@@ -2,23 +2,22 @@ class AnswerController < ApplicationController
   def create
     @answer = Answer.new(answer_params)
 
-    turbo_stream_message = <<-HTML
-      <turbo-stream action="append" target="answer-history">
-        <template>
-          <div class="message">#{@answer.content}</div>
-        </template>
-      </turbo-stream>
-    HTML
-
-    ActionCable.server.broadcast("similarity_channel_#{}", turbo_stream_message)
-
     if @answer.save
+      is_correct = CorrectAnswer.current_answer.answer == @answer.content
+
+      turbo_stream_message = render_to_string(
+        partial: "answer/answer",
+        formats: [:turbo_stream],
+        locals: {answer: @answer, is_correct: is_correct}
+      )
+      ActionCable.server.broadcast("similarity_channel_", turbo_stream_message)
+
       respond_to do |format|
         format.turbo_stream
-        format.json { render json: { message: "Answer created successfully" }, status: :created }
+        format.json { render json: {message: "Answer created successfully"}, status: :created }
       end
     else
-      render json: { message: "Answer not created" }, status: :unprocessable_entity
+      render json: {message: "Unprocessable answer"}, status: :unprocessable_entity
     end
   end
 
