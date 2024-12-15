@@ -1,11 +1,3 @@
-<turbo-stream action="append" target="answer-history">
-  <template>
-    <div class="px-4 py-2 bg-blue-200 rounded-r-lg rounded-tl-lg mb-2">
-      <%= @answer.content %>
-    </div>
-  </template>
-</turbo-stream>
-
 <turbo-stream action="replace" target="answer-form">
   <template>
     <%= render partial: 'home/form', formats: [:html] %>
